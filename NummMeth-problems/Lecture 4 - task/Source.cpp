@@ -10,11 +10,7 @@
 using namespace std;
 using namespace util;
 
-int error = 0;
-Doub calcError(MatDoub x, MatDoub y) //First typecast the x and y vectors into matrices and solve the error estimate from: https://www.itl.nist.gov/div898/strd/lls/data/LINKS/c-Pontius.shtml
-{
-	pow((T(x)*x), -1)*T(x)*y;  //Find out why this line is illegal
-}
+
 
 int main() {
 	VecDoub xFilip(82); VecDoub yFilip(82);
@@ -55,7 +51,16 @@ int main() {
 	print(x, "x");
 	print(x2, "x2");
 
-	
+	int error = 0;
+	SVD SVD_A1((T(A)*A));
+	MatDoub SVD_A1inv;
+
+	for (int i = 0; i < SVD_A1.n; i++)
+	{
+		SVD_A1inv[i][i] = 1.0 / SVD_A1[i]; // Lav en inverteret matrix og regn videre derfra
+ 	}
+
+
 	cout << " error: " << error << endl;
 	cin.ignore();
 	return 0;
