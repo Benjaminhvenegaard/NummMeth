@@ -20,10 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{B1B53C34-97A8-49F2-887E-3C801625547B}</ProjectGuid>
-    <RootNamespace>Lecture5task</RootNamespace>
+    <ProjectGuid>{273AF64B-99D3-4C4F-8630-05440A85D301}</ProjectGuid>
+    <RootNamespace>Lecture13task</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>Lecture5-task</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -116,7 +115,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source5.cpp" />
+    <ClCompile Include="Source13.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="psplot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
