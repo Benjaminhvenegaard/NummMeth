@@ -1,76 +1,151 @@
 
+//Includes:
 #include <iostream>
 #include <fstream>
 #include <math.h>
-#include <string>
+#include <string.h>
 
+//H-files Numerical recipies:
 #include "../Source Code/code/nr3.h"
 #include "../Source Code/code/ludcmp.h"
-#include "../Source Code/code/cholesky.h"
-#include "../Source Code/code/svd.h"
 #include "../Source Code/code/utilities.h"
+#include "../Source Code/code/cholesky.h"
 
+//H-files My own:
+
+//Namespaces
 using namespace std;
+using namespace util;
 
-int main() {
+int main()
+{
 
-	VecDoub xFilip(82); VecDoub yFilip(82);
-	ifstream Filip("src/FilipData.dat");
+	VecDoub xPont(40); VecDoub yPont(40);
+	ifstream Pont("../Lecture2-task/PontiusData.dat");
+	for (int i = 0; i < 40; i++) 
+	{
+		Pont >> yPont[i];
+		Pont >> xPont[i];
+	}
+
+	MatDoub A( 40, 3);
+
+	for (int i = 0; i < A.nrows(); i++)
+	{
+		A[i][0] = 1.0;
+		A[i][1] = xPont[i];
+		A[i][2] = xPont[i] * xPont[i];
+	}
+
+
+	// AT* A * x = AT * y
+
+	MatDoub At = Transpose(A);
+
+	MatDoub AtA = At * A;
+	VecDoub AtY = At * yPont;
+
+	//Use LU to decompose
+
+	LUdcmp LU(AtA);
+	//Make the result vector
+	VecDoub x(3);
+
+	MatDoub C;
+
+	LU.solve(AtY, x);
+
+	print(x, "Pontius solution with LU");
+
+	LU.inverse(C);
+
+	//printDiag(C, "Variance");
+
+	cout << endl;
+
+	//Solve using Cholesky
+
+	Cholesky Cho(AtA);
+
+	Cho.solve(AtY, x);
+
+	print(x, " Pontius solution using Cholesky:");
+
+	Cho.inverse(C);
+	printDiag(C, "Variance:");
+
+	cout << endl << endl;
+
+	cout << endl;
+	cout << endl;
+
+
+
+
+
+	//.....Filip-dataset.....//
+	
+	
+	/*VecDoub xFilip(82); VecDoub yFilip(82);
+	ifstream Filip("../Lecture2-task/FilipData.dat");
 	for (int i = 0; i < 82; i++) {
 		Filip >> yFilip[i];
 		Filip >> xFilip[i];
 	}
 
-	// Get information from the data file
-	VecDoub xPont(40); VecDoub yPont(40);
-	ifstream Pont("src/PontiusData.dat");
-	for (int i = 0; i < 40; i++) {
-		Pont >> yPont[i];
-		Pont >> xPont[i];
-	}
+	MatDoub A2(xFilip.size(), 11);
 
-	// your code
-	// Make an A matrix with the informartion from the data file
-	MatDoub A(40, 3);
-	for (int i = 0; i <A.nrows(); i++)
+	for (size_t i = 0; i < A2.nrows(); i++)
 	{
-		A[i][0] = 1.0; A[i][1] = xPont[i]; A[i][2] = xPont[i] * xPont[i];
+		for (size_t j = 0; j < A2.ncols(); j++)
+		{
+			A2[i][j] = pow(xFilip[i], (double)j);
+		}
 	}
 
-	// Make the transpose of A
-	MatDoub AT = util::Transpose(A);
 
-	// At * A * x = At * y
-	MatDoub ATA = AT * A;
-	VecDoub ATy = AT * yPont;
 
-	// Use LU decompose
-	LUdcmp LU(ATA);
-	// make a result vector
-	VecDoub x(3);
+	// AT* A * x = AT * y
 
-	MatDoub C;
-	LU.solve(ATy, x);
+	MatDoub At2 = Transpose(A2);
 
-	util::print(x, "Pontius solution using LU:");
-	LU.inverse(C);
-	//	util::printDiag(C,"Variance:");
+	MatDoub AtA2 = At2 * A2;
+	VecDoub AtY2 = At2 * yFilip;
+
+	//Use LU to decompose
+
+	VecDoub x2(A2.ncols());
+	LUdcmp LU2(AtA2);
+	//Make the result vector
+	LU2.solve(AtY2, x2);
+
+	print(x2, "Filip solution with LU");
+	LU2.inverse(C);
+
+
+
+
+
+	//printDiag(C, "Variance");
+
 	cout << endl;
 
-	// Solve using cholesky
-	Cholesky Cho(ATA);
-	Cho.solve(ATy, x);
-	util::print(x, "Pontius solution using Cholesky:");
+	//Solve using Cholesky
 
-	Cho.inverse(C);
-	//	util::printDiag(C,"Variance:");
+	Cholesky Cho2(AtA2);
+
+	Cho2.solve(AtY2, x2);
+
+	print(x2, " Pontius solution using Cholesky:");
+
+	Cho2.inverse(C);
+	printDiag(C, "Variance:");
+
+
 	cout << endl << endl;
-	/*
-	* Cholesky
 	*/
-
 	VecDoub xFilip(82); VecDoub yFilip(82);
-	ifstream Filip("src/FilipData.dat");
+	ifstream Filip("../Lecture2-task/FilipData.dat");
 	for (int i = 0; i < 82; i++) {
 		Filip >> yFilip[i];
 		Filip >> xFilip[i];
@@ -83,6 +158,7 @@ int main() {
 			A2[i][j] = pow(xFilip[i], (double)j);
 	}
 
+	print(A2, "A2");
 	MatDoub AT2 = util::Transpose(A2);
 
 	// At * A * x = At * y
@@ -92,20 +168,37 @@ int main() {
 	VecDoub x2(A2.ncols());
 	LUdcmp LUFilip(ATA2);
 	LUFilip.solve(ATy2, x2);
+	
 	util::print(x2, "Filip using LU:");
 	LUFilip.inverse(C);
-	//	util::printDiag(C, "Variance:");
+		util::printDiag(C, "Variance:");
+	cout << endl;
+	cout << endl;
 	cout << endl;
 
-	cout << "Filip solution using Cholesky:" << endl;
-	try {
-		Cholesky CholeskyFilip(ATA2);
-	}
-	catch (NRerror e) { cout << e.message << endl; }
 
 
 
 
 
-	return 0;
+	cin.ignore();
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

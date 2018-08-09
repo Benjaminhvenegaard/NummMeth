@@ -1,7 +1,5 @@
 
 
-
-
 #include<iostream>
 #include "../Source Code/code/nr3.h"
 #include "../Source Code/code/ludcmp.h"
@@ -31,42 +29,38 @@ int main()
 	VecDoub x(3);
 
 	print(A, "A");
+	print(b, "b");
+	print(x, "x");
 
 
-	//Consider the equation
-	//A  x = b
-	/* Solve equation 1(for x) using LU decomposition(using the source code from NR3)
-	 Hint: You can download the "Lecture1.cpp" to get a starting point.
-	 Print the Solutions and relevant information from the calculations.
-	 Hint: You may download and include the "utilities.h" header le.*/
+	LUdcmp LU(A);
 
+	auto L = LU.lu;
+
+	L[2][1] = L[1][0] = L[2][0] = 0;
+	L[0][0]   = L[1][1]  = L[2][2] = 1;
+
+	print(L, "L");
+
+	auto U = LU.lu;
+
+	U[0][1] = U[0][2] = U[1][2] = 0;
+	print(U, "U");
+
+
+
+	// Solve LU object with b as result and put result in x
+	LU.solve(b, x);
+
+	print(A, "A");
+	print(L*U, "L*U");
+	print(L*U*x, "L*U*x");
+	print(x, "x");
 
 
 	cin.ignore();
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
