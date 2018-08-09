@@ -1,3 +1,81 @@
+
+
+
+
+#include<iostream>
+#include "../Source Code/code/nr3.h"
+#include "../Source Code/code/ludcmp.h"
+#include "../Source Code/code/utilities.h"
+
+
+using namespace std;
+using namespace util;
+
+//Task for lecture 1
+
+
+int main()
+{
+	MatDoub A(3, 3);
+
+	A[0][0] = 1.0; A[0][1] = 2; A[0][2] = 3;
+	A[1][0] = 2.0; A[1][1] = -4; A[1][2] = 6;
+	A[2][0] = 3.0; A[2][1] = -9; A[2][2] = -3;
+
+	VecDoub b(3);
+
+	b[0] = 5.0;
+	b[1] = 18.0;
+	b[2] = 6.0;
+
+	VecDoub x(3);
+
+	print(A, "A");
+
+
+	//Consider the equation
+	//A  x = b
+	/* Solve equation 1(for x) using LU decomposition(using the source code from NR3)
+	 Hint: You can download the "Lecture1.cpp" to get a starting point.
+	 Print the Solutions and relevant information from the calculations.
+	 Hint: You may download and include the "utilities.h" header le.*/
+
+
+
+	cin.ignore();
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 // NUM recipies includes:
 #include "../Source Code/code/nr3.h"
 #include "../Source Code/code/ludcmp.h"
@@ -63,4 +141,4 @@ int main()
 
 
 }
-
+*/

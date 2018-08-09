@@ -23,6 +23,7 @@
     <ProjectGuid>{AE14500A-AD03-4563-AE06-5B123DDBB0ED}</ProjectGuid>
     <RootNamespace>Lecture6task</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>Lecture06-task</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
