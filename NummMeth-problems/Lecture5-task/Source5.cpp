@@ -8,6 +8,9 @@
 //H-files Numerical recipies:
 #include "../Source Code/code/nr3.h"
 
+//Defines
+#define PI 3.14159265 
+
 using namespace std;
 
 void line()
@@ -32,18 +35,47 @@ Doub pow10(int someInt)
 
 // Make bisection method for root finding on non-linear equations
 template <class T>
+
 Doub Bisec(T &func, Doub x0, Doub x1, Doub acc)
 {
+	const Int JMAX = 100;
+	Doub dx, xmid, rtb, dxOld = 99999;
+	Doub f = func(x0);
+	Doub fmid = func(x1);
+	if (f*fmid >= 0.0) throw("Root must be bracketed for bisection in interval");
+	rtb = f < 0.0 ? (dx = x1 - x0, x0) : (dx = x0 - x1, x1);
+	for (Int j = 0; j<JMAX; j++)
+	{
+		cout << setw(15) << j + 1;
+		cout << setw(15) << rtb;
+		cout << setw(15) << rtb + dx;
+		cout << setw(15) << dx;
+		cout << setw(15) << dx / dxOld;
+		cout << setw(15) << 'e' << endl;
+		dxOld = dx;
 
+
+		fmid = func(xmid = rtb + (dx *= 0.5));
+		if (fmid <= 0.0)
+		{
+			rtb = xmid;
+		}
+		if (abs(dx) < acc || fmid == 0.0)
+		{
+			cout << endl ;
+			cout << "Result: ";
+			return rtb;
+		}
+	}
+	throw("Too many bisections in rtbis");
 }
-
 
 
 int main()
 {
-
-
-
+	f function;
+	cout << setw(15) << "k" << setw(15) << "x-min" << setw(15) << "x-max" << setw(15) << "dx" << setw(15) << "C" << setw(15) << "e" << endl;
+	cout << Bisec(function, 0, PI / 2, -16);
 
 
 
@@ -56,55 +88,6 @@ int main()
 
 
 /*
-#include <iostream>
-#include "../Source Code/code/nr3.h"
-#include <math.h>
-//#include <roots.h>
-
-using namespace std;
-
-void line() { cout << endl << "-----------------------------------------------------------------------------------------------" << endl; }
-
-//double f(double x) {return x-cos(x); }
-
-struct f
-{
-Doub operator()(Doub x) { return x - cos(x); }
-Doub dc(Doub x) { return 1 + sin(x); }
-};
-
-Doub pow10(int someint)
-{
-return (pow(10, someint));
-}
-
-// Make bisection method for root finding on non-linear equations
-template <class T>
-Doub rtbis(T &func, const Doub x1, const Doub x2, const Doub xacc)
-{
-const Int JMAX = 50;
-Doub dx, xmid, rtb, dxOld = 99999;
-Doub f = func(x1);
-Doub fmid = func(x2);
-if (f*fmid >= 0.0) throw("Root must be bracketed for bisection in rtbis");
-rtb = f < 0.0 ? (dx = x2 - x1, x1) : (dx = x1 - x2, x2);
-for (Int j = 0; j<JMAX; j++)
-{
-cout << setw(15) << j + 1;
-cout << setw(15) << rtb;
-cout << setw(15) << rtb + dx;
-cout << setw(15) << dx;
-cout << setw(15) << dx / dxOld;
-cout << setw(15) << 'e' << endl;
-dxOld = dx;
-
-
-fmid = func(xmid = rtb + (dx *= 0.5));
-if (fmid <= 0.0) rtb = xmid;
-if (abs(dx) < xacc || fmid == 0.0) return rtb;
-}
-throw("Too many bisections in rtbis");
-}
 
 
 // Make secant method
