@@ -122,10 +122,22 @@ Doub rtFalsePos(T &func, Doub x0, Doub x1, Doub acc)
 {
 	const Int JMAX = 100;
 	Doub dx, xmid, rtb, dxOld = 99999;
-	Doub f = func(x0);
-	Doub fmid = func(x1);
-	if (f*fmid >= 0.0) throw("Root must be bracketed for bisection in interval");
-	rtb = f < 0.0 ? (dx = x1 - x0, x0) : (dx = x0 - x1, x1);
+	Doub f1 = func(x0);
+	Doub f2 = func(x1);
+	
+
+	if (abs(f1) < abs(f2))
+	{
+		rts = x0;
+		xl = x1;
+		SWAP(f1, f2);
+	}
+	else
+	{
+		xl = x0;
+		rts = x1;
+	}
+	
 	for (Int j = 0; j<JMAX; j++)
 	{
 		cout << setw(15) << j + 1;
@@ -151,7 +163,7 @@ Doub rtFalsePos(T &func, Doub x0, Doub x1, Doub acc)
 			return rtb;
 		}
 	}
-	throw("Too many bisections in rtbis");
+	throw("Too many iterations in False Position");
 }
 
 
