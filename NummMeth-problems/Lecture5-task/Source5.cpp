@@ -18,7 +18,6 @@ void line()
 	cout << "-------------------------------------------------------------------------------------------" << endl;
 }
 
-
 struct f
 {
 	Doub operator()(Doub x) { return x - cos(x); }
@@ -26,12 +25,10 @@ struct f
 
 };
 
-
 Doub pow10(int someInt)
 {
 	return pow(10,someInt);
 }
-
 
 // Make bisection method for root finding on non-linear equations
 template <class T>
@@ -51,7 +48,9 @@ Doub Bisec(T &func, Doub x0, Doub x1, Doub acc)
 		cout << setw(15) << rtb + dx;
 		cout << setw(15) << dx;
 		cout << setw(15) << dx / dxOld;
-		cout << setw(15) << 'e' << endl;
+		cout << setw(15) << abs(dx);
+		cout << endl;
+
 		dxOld = dx;
 
 
@@ -70,14 +69,107 @@ Doub Bisec(T &func, Doub x0, Doub x1, Doub acc)
 	throw("Too many bisections in rtbis");
 }
 
+template <class T>
+Doub rtSec(T &func, Doub x0, Doub x1, Doub acc)
+{
+	const Int JMAX = 30;
+	Doub dx, xl, rts, dxOld = 99999;
+	Doub f1 = func(x0);
+	Doub f2 = func(x1);
+	Doub estimateC = 0;
+
+	if (abs(f1) < abs(f2)) 
+	{
+		rts = x0;
+		xl = x1;
+		SWAP(f1, f2);
+	}
+	else 
+	{
+		xl = x0;
+		rts = x1;
+	}
+
+	for (int j = 0; j < JMAX; j++)
+	{
+		dx = (xl - rts)*f2 / (f2 - f1);
+		Doub C = abs(dx) / (pow(abs(dxOld), 1.62));
+		cout << setw(15) << j + 1;
+		cout << setw(15) << rts;
+		cout << setw(15) << rts + dx;
+		cout << setw(15) << dx;
+		cout << setw(15) << C;
+		cout << setw(15) << ((-C) / (1-C))*dx << endl;
+		dxOld = rts;
+
+		xl = rts;
+		f1 = f2;
+		rts += dx;
+		f2 = func(rts);
+		if (abs(dx) < acc || f2 == 0.0)
+		{
+			cout << endl;
+			cout << "Result: ";
+			return rts;
+		}
+
+	}
+	throw("Two many iterations");
+}
+
+template <class T>
+Doub rtFalsePos(T &func, Doub x0, Doub x1, Doub acc)
+{
+	const Int JMAX = 100;
+	Doub dx, xmid, rtb, dxOld = 99999;
+	Doub f = func(x0);
+	Doub fmid = func(x1);
+	if (f*fmid >= 0.0) throw("Root must be bracketed for bisection in interval");
+	rtb = f < 0.0 ? (dx = x1 - x0, x0) : (dx = x0 - x1, x1);
+	for (Int j = 0; j<JMAX; j++)
+	{
+		cout << setw(15) << j + 1;
+		cout << setw(15) << rtb;
+		cout << setw(15) << rtb + dx;
+		cout << setw(15) << dx;
+		cout << setw(15) << dx / dxOld;
+		cout << setw(15) << abs(dx);
+		cout << endl;
+
+		dxOld = dx;
+
+
+		fmid = func(xmid = rtb + (dx *= 0.5));
+		if (fmid <= 0.0)
+		{
+			rtb = xmid;
+		}
+		if (abs(dx) < acc || fmid == 0.0)
+		{
+			cout << endl;
+			cout << "Result: ";
+			return rtb;
+		}
+	}
+	throw("Too many bisections in rtbis");
+}
+
+
 
 int main()
 {
 	f function;
-	cout << setw(15) << "k" << setw(15) << "x-min" << setw(15) << "x-max" << setw(15) << "dx" << setw(15) << "C" << setw(15) << "e" << endl;
+	cout << setw(15) << "k" << setw(15) << "x-min" << setw(15) << "x-max" << setw(15) << "dx" << setw(15) << "C" << setw(15) << "ek" << endl;
 	cout << Bisec(function, 0, PI / 2, -16);
-
-
+	cout << endl;
+	line();
+	cout << endl;
+	cout << setw(15) << "k" << setw(15) << "x-min" << setw(15) << "x-max" << setw(15) << "dx" << setw(15) << "C" << setw(15) << "ek" << endl;
+	cout << rtSec(function, 0, PI / 2, -16);
+	line();
+	cout << endl;
+	cout << setw(15) << "k" << setw(15) << "x-min" << setw(15) << "x-max" << setw(15) << "dx" << setw(15) << "C" << setw(15) << "ek" << endl;
+	cout << rtFalsePos(function, 0, PI / 2, -16);
 
 
 
@@ -89,42 +181,6 @@ int main()
 
 /*
 
-
-// Make secant method
-template <class T>
-Doub rtsec(T &func, const Doub x1, const Doub x2, const Doub xacc) {
-const Int MAXIT = 30;
-Doub xl, rts, xOld = 9999;
-Doub fl = func(x1);
-Doub f = func(x2);
-if (abs(fl) < abs(f)) {
-rts = x1;
-xl = x2;
-SWAP(fl, f);
-}
-else {
-xl = x1;
-rts = x2;
-}
-for (Int j = 0; j<MAXIT; j++) {
-Doub dx = (xl - rts)*f / (f - fl);
-
-
-cout << setw(15) << j + 1;
-cout << setw(15) << rts;
-cout << setw(15) << dx;
-cout << setw(15) << abs(dx) / pow(abs(xOld - rts), 1.62);
-cout << setw(15) << 'e' << endl;
-xOld = rts;
-
-xl = rts;
-fl = f;
-rts += dx;
-f = func(rts);
-if (abs(dx) < xacc || f == 0.0) return rts;
-}
-throw("Maximum number of iterations exceeded in rtsec");
-}
 
 template <class T>
 Doub rtflsp(T &func, const Doub x1, const Doub x2, const Doub xacc) {
@@ -182,6 +238,10 @@ if (abs(del) < xacc || f == 0.0) return rtf;
 }
 throw("Maximum number of iterations exceeded in rtflsp");
 }
+
+
+
+
 
 template <class T>
 Doub zriddr(T &func, const Doub x1, const Doub x2, const Doub xacc) {
